@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_almoxarifado"
+            android:title="TimeLine" />
+        <item
+            android:id="@+id/nav_manutencao"
+            android:title="Eventos" />
+        <item
+            android:id="@+id/nav_abastecimento"
+            android:title="Grupos" />
+        <item
+            android:id="@+id/nav_sair"
+            android:title="Sair" />
+    </group>
+
+</menu>
