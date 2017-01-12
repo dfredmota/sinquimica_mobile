@@ -7,7 +7,9 @@ package br.com.sindquimica.services;
 public class URL {
 
     //private static String ws = "http://192.168.56.1:8080/DNACoachServer/";
-    private static String ws = "http://192.168.25.162:8080/sindquimica";
+    //private static String ws = "http://192.168.25.162:8080/sindquimica";
+    private static String ws = "http://192.175.112.170:7825/sindquimica-1/";
+
 
     private static String concat(String str) {
         return ws + str;

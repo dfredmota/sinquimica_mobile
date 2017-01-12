@@ -1,6 +1,8 @@
 package br.com.sindquimica.activity;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -14,6 +16,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
 import java.util.List;
 import br.com.martinlabs.commons.android.MLActivity;
@@ -24,6 +27,7 @@ import br.com.sindquimica.model.Grupo;
 import br.com.sindquimica.model.Mensagem;
 import br.com.sindquimica.model.Usuario;
 import br.com.sindquimica.process.ProcessServices;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class HomeAct extends MLActivity implements NavigationView.OnNavigationItemSelectedListener{
 
@@ -75,6 +79,19 @@ public class HomeAct extends MLActivity implements NavigationView.OnNavigationIt
         navigationView2.setNavigationItemSelectedListener(this);
 
         listViewMensagens = (ListView) findViewById(R.id.list);
+
+        Usuario usuario = ProcessServices.getUsuarioLogado(this);
+
+        if(usuario != null && usuario.getImagem() !=null) {
+
+            Bitmap bmp = BitmapFactory.decodeByteArray(usuario.getImagem(), 0, usuario.getImagem().length);
+
+            Bitmap bMapScaled = Bitmap.createScaledBitmap(bmp, 70, 70, true);
+
+            View hView =  navigationView1.getHeaderView(0);
+            CircleImageView nav_user = (CircleImageView)hView.findViewById(R.id.profile_image);
+            nav_user.setImageBitmap(bMapScaled);
+        }
 
         queueLoading(R.string.carregando, () -> carregaMensagens());
         queueLoading(R.string.carregando, () -> carregaGrupos());

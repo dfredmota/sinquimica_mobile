@@ -12,11 +12,11 @@
     android:paddingTop="16dp"
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
+
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/profile_image"
-        android:layout_width="96dp"
-        android:layout_height="96dp"
-        android:src="@drawable/brena"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
         app:civ_border_width="1dp"
         android:layout_marginLeft="40dp"
         app:civ_border_color="@color/cinzaClaro"/>

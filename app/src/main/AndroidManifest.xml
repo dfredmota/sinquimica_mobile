@@ -40,6 +40,19 @@
         <activity android:name=".activity.EsqueciSenhaAct"></activity>
         <activity android:name=".activity.ValidarBiometria" />
         <activity android:name=".activity.ValidaFoto" />
+
+        <service android:name=".notifications.SFireBaseMessagingService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+            </intent-filter>
+        </service>
+
+        <service android:name=".notifications.SFirebaseInstanceIdService">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+            </intent-filter>
+        </service>
+
     </application>
 
 </manifest>

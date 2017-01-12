@@ -53,8 +53,14 @@ public class LoginAct extends MLActivity {
 
         if (resp.isSuccess() && (resp.getData() != null && resp.getData().getNome() != null)) {
 
-            uiToast("Login realizado com sucesso!",true);
-            NavHome();
+            if(resp.getData().getStatus()) {
+
+                uiToast("Login realizado com sucesso!", true);
+                NavHome();
+            }else{
+                uiToast("Usuário Bloqueado.Fale com o Administrador!", false);
+
+            }
 
         } else {
             uiToast("Login inválido!",true);

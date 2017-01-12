@@ -25,6 +25,7 @@ import br.com.sindquimica.model.Endereco;
 import br.com.sindquimica.model.Perfil;
 import br.com.sindquimica.model.Usuario;
 import br.com.sindquimica.process.ProcessServices;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class UsuarioAct extends MLActivity {
 
@@ -49,9 +50,9 @@ public class UsuarioAct extends MLActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_usuario);
 
-        //queueLoading(R.string.carregando, () -> carregarDados());
+        queueLoading(R.string.carregando, () -> carregarDados());
 
-
+        usuario = new Usuario();
 
         fotoUsuarioView = (ImageView) findViewById(R.id.fotoUsuario);
 
@@ -67,6 +68,8 @@ public class UsuarioAct extends MLActivity {
                 Bitmap bMapScaled = Bitmap.createScaledBitmap(bmp, 70, 70, true);
 
                 fotoUsuarioView.setImageBitmap(bMapScaled);
+
+                usuario.setImagem(fotoUsuario);
             }
 
         }
@@ -106,7 +109,7 @@ public class UsuarioAct extends MLActivity {
 
     private void registrarUsuario() {
 
-        usuario = new Usuario();
+
 
         String nome = ((EditText) f(R.id.editNome)).getText().toString();
         String dtNascimento = ((EditText) f(R.id.editDtNascimento)).getText().toString();
@@ -257,8 +260,6 @@ public class UsuarioAct extends MLActivity {
 
             }
         });
-
-
 
     }
 
