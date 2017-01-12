@@ -1,7 +1,9 @@
 package br.com.sindquimica.activity;
 
 import android.Manifest;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -15,6 +17,7 @@ import br.com.martinlabs.commons.android.Validator;
 import br.com.sindquimica.R;
 import br.com.sindquimica.model.Usuario;
 import br.com.sindquimica.process.ProcessServices;
+import br.com.sindquimica.util.Data;
 
 public class LoginAct extends MLActivity {
 
@@ -49,13 +52,14 @@ public class LoginAct extends MLActivity {
             return;
         }
 
-        OpResponse<Usuario> resp = ProcessServices.getSessionInstance().login(senha,email, this);
+        OpResponse<Usuario> resp = ProcessServices.getSessionInstance().login(senha,email,Data.getToken(PreferenceManager.getDefaultSharedPreferences(this)), this);
 
         if (resp.isSuccess() && (resp.getData() != null && resp.getData().getNome() != null)) {
 
             if(resp.getData().getStatus()) {
 
                 uiToast("Login realizado com sucesso!", true);
+
                 NavHome();
             }else{
                 uiToast("Usuário Bloqueado.Fale com o Administrador!", false);
@@ -67,7 +71,6 @@ public class LoginAct extends MLActivity {
         }
 
     }
-
 
     private void NavHome() {
         startActivityClearTask(HomeAct.class);

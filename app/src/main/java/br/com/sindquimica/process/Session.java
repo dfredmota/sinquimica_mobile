@@ -22,10 +22,10 @@ import br.com.sindquimica.services.URL;
  */
 public class Session {
 
-    public OpResponse<Usuario> login(String senha, String email, Context ctx) {
+    public OpResponse<Usuario> login(String senha, String email,String token, Context ctx) {
 
         OpResponse<Usuario> resp = Req.post(URL.login(),
-                new LoginRequest(senha, email),
+                new LoginRequest(senha, email,token),
                 new TypeToken<OpResponse<Usuario>>() {
                 }.getType());
 
