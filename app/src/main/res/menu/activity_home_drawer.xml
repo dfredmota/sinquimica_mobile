@@ -3,16 +3,20 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_almoxarifado"
+            android:id="@+id/nav_perfil"
+            android:icon="@mipmap/perfil"
+            android:title="Perfil" />
+        <item
+            android:id="@+id/nav_timeline"
+            android:icon="@mipmap/timeline"
             android:title="TimeLine" />
         <item
-            android:id="@+id/nav_manutencao"
+            android:id="@+id/nav_eventos"
+            android:icon="@mipmap/date"
             android:title="Eventos" />
         <item
-            android:id="@+id/nav_abastecimento"
-            android:title="Grupos" />
-        <item
             android:id="@+id/nav_sair"
+            android:icon="@mipmap/exit"
             android:title="Sair" />
     </group>
 

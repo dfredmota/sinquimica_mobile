@@ -1,33 +1,42 @@
 package br.com.sindquimica.activity;
 
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.support.v7.app.AppCompatActivity;
+import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.provider.MediaStore;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
-
+import android.widget.Toast;
+import java.io.ByteArrayOutputStream;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
 
-import br.com.martinlabs.commons.android.MLActivity;
-import br.com.martinlabs.commons.android.OpResponse;
 import br.com.sindquimica.R;
 import br.com.sindquimica.adapter.SpinnerAdapterEmpresaAssociada;
-import br.com.sindquimica.model.EmpresaAssociada;
-import br.com.sindquimica.model.Endereco;
-import br.com.sindquimica.model.Perfil;
-import br.com.sindquimica.model.Usuario;
-import br.com.sindquimica.process.ProcessServices;
-import de.hdodenhof.circleimageview.CircleImageView;
+import br.com.sindquimica.delegate.ListaEmpresaDelegate;
+import br.com.sindquimica.delegate.RegistraUsuarioDelegate;
+import br.com.sindquimica.task.ListaEmpresaTask;
+import br.com.sindquimica.task.RegistraUsuarioTask;
+import br.com.sindquimica.util.Data;
+import br.com.sindquimica.util.Mask;
+import br.developersd3.sindquimica.ws.EmpresaAssociada;
+import br.developersd3.sindquimica.ws.Endereco;
+import br.developersd3.sindquimica.ws.Perfil;
+import br.developersd3.sindquimica.ws.Usuario;
 
-public class UsuarioAct extends MLActivity {
+public class UsuarioAct extends AppCompatActivity implements RegistraUsuarioDelegate,ListaEmpresaDelegate {
 
     private List<EmpresaAssociada> listaEmpresasAssociadas;
 
@@ -39,60 +48,55 @@ public class UsuarioAct extends MLActivity {
 
     DateFormat df = DateFormat.getDateInstance(DateFormat.DEFAULT, Locale.getDefault());
 
-    SimpleDateFormat format = new SimpleDateFormat("dd/mm/yyyy");
-
-    byte[] fotoUsuario;
+    SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
 
     ImageView fotoUsuarioView;
+
+    int PICK_PHOTO_FOR_AVATAR = 985;
+
+    EditText dataNascimento;
+    EditText telefone;
+    EditText celular;
+    EditText cep;
+
+    ProgressDialog ringProgressDialog;
+
+    ImageView btnPersistUsuario;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_usuario);
 
-        queueLoading(R.string.carregando, () -> carregarDados());
 
         usuario = new Usuario();
 
         fotoUsuarioView = (ImageView) findViewById(R.id.fotoUsuario);
 
-        Bundle extras = getIntent().getExtras();
-        if (extras != null) {
-
-            fotoUsuario = extras.getByteArray("fotoParceiro");
-
-            if(fotoUsuario != null){
-
-                Bitmap bmp = BitmapFactory.decodeByteArray(fotoUsuario, 0, fotoUsuario.length);
-
-                Bitmap bMapScaled = Bitmap.createScaledBitmap(bmp, 70, 70, true);
-
-                fotoUsuarioView.setImageBitmap(bMapScaled);
-
-                usuario.setImagem(fotoUsuario);
-            }
-
-        }
-
         registerInteraction();
+
+        instanceObjects();
+
+        carregarDados();
+    }
+
+    @Override
+    public void listou(List<EmpresaAssociada> lista) {
+
+        ringProgressDialog.dismiss();
+
+        if(lista != null){
+            listaEmpresasAssociadas = lista;
+            populateEmpresasAssociadas();
+        }
     }
 
     private void carregarDados()
     {
 
-        OpResponse<List<EmpresaAssociada>> resp = ProcessServices.getSessionInstance().carregaListaEmpresaAssociadas(this);
+        ListaEmpresaTask task = new ListaEmpresaTask(this);
 
-        if (resp.isSuccess())
-        {
-            listaEmpresasAssociadas = resp.getData();
-
-            ui(() -> populateEmpresasAssociadas());
-        }
-        else
-        {
-            uiToast(resp);
-        }
-
+        task.execute();
 
     }
 
@@ -106,95 +110,143 @@ public class UsuarioAct extends MLActivity {
         spinnerEmpresa.setAdapter(adapterEmpresaAssociada);
     }
 
+    @Override
+    public void carregaDialog() {
+        ringProgressDialog= ProgressDialog.show(this,"Aguarde...","");
+        ringProgressDialog.show();
+    }
+
+    @Override
+    public void registraUsuario(Usuario usuario) {
+
+        ringProgressDialog.dismiss();
+
+        if(usuario != null) {
+
+            Data.insertUsuario(PreferenceManager.getDefaultSharedPreferences(this), usuario);
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(UsuarioAct.this);
+
+            builder.setMessage("Usuário cadastrado com sucesso. Aguarde desbloqueio pelo adminstrador!")
+                    .setCancelable(false)
+                    .setPositiveButton("OK",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+
+                                    Intent i = new Intent(UsuarioAct.this, LoginAct.class);
+                                    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                    startActivity(i);
+
+                                    return;
+
+                                }
+                            });
+
+            AlertDialog alert = builder.create();
+            alert.show();
+
+        }else{
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(UsuarioAct.this);
+
+            builder.setMessage("Erro ao cadastrar usuário. tente mais tarde!")
+                    .setCancelable(false)
+                    .setPositiveButton("OK",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+
+                                    return;
+
+                                }
+                            });
+
+            AlertDialog alert = builder.create();
+            alert.show();
+        }
+
+
+    }
 
     private void registrarUsuario() {
 
-
-
-        String nome = ((EditText) f(R.id.editNome)).getText().toString();
-        String dtNascimento = ((EditText) f(R.id.editDtNascimento)).getText().toString();
-        String editEmail = ((EditText) f(R.id.editEmail)).getText().toString();
-        String editTelefone = ((EditText) f(R.id.editTelefone)).getText().toString();
-        String editCelular = ((EditText) f(R.id.editCelular)).getText().toString();
-        String editLogin = ((EditText) f(R.id.editLogin)).getText().toString();
-        String editSenha = ((EditText) f(R.id.editSenha)).getText().toString();
-        String editConfirmeASenha = ((EditText) f(R.id.editConfirmeASenha)).getText().toString();
-        String editLogradouro = ((EditText) f(R.id.editLogradouro)).getText().toString();
-        String editNumero = ((EditText) f(R.id.editNumero)).getText().toString();
-        String editComplemento = ((EditText) f(R.id.editComplemento)).getText().toString();
-        String editBairro = ((EditText) f(R.id.editBairro)).getText().toString();
-        String editCidade = ((EditText) f(R.id.editCidade)).getText().toString();
-        String editCep = ((EditText) f(R.id.editCep)).getText().toString();
+        String nome = ((EditText) findViewById(R.id.editNome)).getText().toString();
+        String dtNascimento = ((EditText) findViewById(R.id.editDtNascimento)).getText().toString();
+        String editEmail = ((EditText) findViewById(R.id.editEmail)).getText().toString();
+        String editTelefone = ((EditText) findViewById(R.id.editTelefone)).getText().toString();
+        String editCelular = ((EditText) findViewById(R.id.editCelular)).getText().toString();
+        String editLogin = ((EditText) findViewById(R.id.editLogin)).getText().toString();
+        String editSenha = ((EditText) findViewById(R.id.editSenha)).getText().toString();
+        String editConfirmeASenha = ((EditText) findViewById(R.id.editConfirmeASenha)).getText().toString();
+        String editLogradouro = ((EditText) findViewById(R.id.editLogradouro)).getText().toString();
+        String editNumero = ((EditText) findViewById(R.id.editNumero)).getText().toString();
+        String editComplemento = ((EditText) findViewById(R.id.editComplemento)).getText().toString();
+        String editBairro = ((EditText) findViewById(R.id.editBairro)).getText().toString();
+        String editCidade = ((EditText) findViewById(R.id.editCidade)).getText().toString();
+        String editCep = ((EditText) findViewById(R.id.editCep)).getText().toString();
 
 
         if (nome == null || nome.isEmpty()) {
-            uiToast("Nome obrigatório",false);
+            Toast.makeText(this, "Nome obrigatório", Toast.LENGTH_LONG).show();
             return;
         }
 
         if (dtNascimento == null || dtNascimento.isEmpty()) {
-            uiToast("Data de Nascimento",false);
+            Toast.makeText(this, "Data de Nascimento", Toast.LENGTH_LONG).show();
             return;
         }
 
         if (editEmail == null || editEmail.isEmpty()) {
-            uiToast("Email obrigatório",false);
+            Toast.makeText(this, "Email obrigatório", Toast.LENGTH_LONG).show();
             return;
         }
 
         if (editTelefone == null || editTelefone.isEmpty()) {
-            uiToast("Telefone obrigatório",false);
-            return;
+            editTelefone = " ";
         }
 
         if (editCelular == null || editCelular.isEmpty()) {
-            uiToast("Celular obrigatório",false);
+            Toast.makeText(this, "Celular obrigatório", Toast.LENGTH_LONG).show();
             return;
         }
 
         if (editLogin == null || editLogin.isEmpty()) {
-            uiToast("Login obrigatório",false);
+            Toast.makeText(this, "Login obrigatório", Toast.LENGTH_LONG).show();
             return;
         }
 
         if (editSenha == null || editSenha.isEmpty()) {
-            uiToast("Senha obrigatória",false);
+            Toast.makeText(this, "Senha obrigatória", Toast.LENGTH_LONG).show();
             return;
         }
 
         if (editConfirmeASenha == null || editConfirmeASenha.isEmpty()) {
-            uiToast("Confirmação de senha obrigatória",false);
+            Toast.makeText(this, "Confirmação de senha obrigatória", Toast.LENGTH_LONG).show();
             return;
         }
 
         if (!editConfirmeASenha.equals(editSenha)) {
-            uiToast("Confirmação de senha não confere com senha.",false);
+            Toast.makeText(this, "Confirmação de senha não confere com senha.", Toast.LENGTH_LONG).show();
             return;
         }
 
         if (editLogradouro == null || editLogradouro.isEmpty()) {
-            uiToast("Logradouro obrigatório",false);
-            return;
+            editLogradouro = " ";
         }
 
         if (editNumero == null || editNumero.isEmpty()) {
-            uiToast("Numero obrigatório",false);
-            return;
+            editNumero = " ";
         }
 
         if (editComplemento == null || editComplemento.isEmpty()) {
-            uiToast("Complemento obrigatório",false);
-            return;
-        }
+            editComplemento = " ";
+         }
 
         if (editBairro == null || editBairro.isEmpty()) {
-            uiToast("Bairro obrigatório",false);
-            return;
+            editBairro = " ";
         }
 
         if (editCidade == null || editCidade.isEmpty()) {
-            uiToast("Cidade obrigatório",false);
-            return;
+            editCidade = " ";
         }
 
         usuario.setNome(nome);
@@ -212,7 +264,7 @@ public class UsuarioAct extends MLActivity {
         usuario.setPassword(editSenha);
 
         Perfil perfil = new Perfil();
-        perfil.setId(2);
+        perfil.setId(3);
         usuario.setPerfil(perfil);
         usuario.setStatus(false);
 
@@ -228,42 +280,91 @@ public class UsuarioAct extends MLActivity {
 
         usuario.setEndereco(endereco);
 
-        usuario.setImagem(fotoUsuario);
+        RegistraUsuarioTask task = new RegistraUsuarioTask(this);
 
-        OpResponse<Usuario> resp = ProcessServices.getSessionInstance().registrarUsuario(this,usuario);
+        task.execute(usuario);
 
-        if (resp.isSuccess() && (resp.getData() != null && resp.getData().getId() != null)) {
+   }
 
-            uiToast("Usuário cadastrado com sucesso. Aguarde desbloqueio pelo adminstrador!",true);
-            NavLogin();
+    private void instanceObjects(){
 
-        } else {
-            uiToast("Erro ao cadastrar usuário, Tente novamente mais tarde!",false);
-        }
+        telefone = (EditText) findViewById(R.id.editTelefone);
+
+        telefone.addTextChangedListener(Mask.insert("(##)####-####", telefone));
+
+        celular = (EditText) findViewById(R.id.editCelular);
+
+        celular.addTextChangedListener(Mask.insert("(##)#####-####", celular));
+
+        cep = (EditText) findViewById(R.id.editCep);
+
+        cep.addTextChangedListener(Mask.insert("##.###-###", cep));
+
+        dataNascimento = (EditText) findViewById(R.id.editDtNascimento);
+        dataNascimento.addTextChangedListener(Mask.insert("##/##/####", dataNascimento));
+
 
     }
 
     private void registerInteraction() {
 
 
-        f(R.id.btnPersistParceiro).setOnClickListener(v -> {
-            queueLoading(R.string.carregando, () -> registrarUsuario());
+        btnPersistUsuario = (ImageView) findViewById(R.id.btnPersistUsuario);
+
+        btnPersistUsuario.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                registrarUsuario();
+
+            }
         });
 
         fotoUsuarioView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                Intent intent = new Intent(UsuarioAct.this, ValidarBiometria.class);
-
-                startActivity(intent);
+                pickImage();
 
             }
         });
 
     }
 
-    private void NavLogin() {
-        startActivityClearTask(LoginAct.class);
+
+    public void pickImage() {
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("image/*");
+        startActivityForResult(intent, PICK_PHOTO_FOR_AVATAR);
     }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PICK_PHOTO_FOR_AVATAR && resultCode == Activity.RESULT_OK) {
+            if (data == null) {
+                //Display an error
+                return;
+            }
+            try {
+
+                Uri selectedImage = data.getData();
+
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImage);
+
+                fotoUsuarioView.setImageBitmap(bitmap);
+
+                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                byte[] byteArray = stream.toByteArray();
+
+                usuario.setImagem(byteArray);
+
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+    }
+
+
 }

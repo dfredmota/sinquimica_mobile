@@ -1,6 +1,8 @@
 package br.com.sindquimica.activity;
 
 import android.Manifest;
+import android.app.ProgressDialog;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.preference.PreferenceManager;
@@ -8,26 +10,34 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
-
-import br.com.martinlabs.commons.android.MLActivity;
-import br.com.martinlabs.commons.android.OpResponse;
-import br.com.martinlabs.commons.android.SecurityUtils;
-import br.com.martinlabs.commons.android.Validator;
+import android.widget.TextView;
+import android.widget.Toast;
 import br.com.sindquimica.R;
-import br.com.sindquimica.model.Usuario;
-import br.com.sindquimica.process.ProcessServices;
+import br.com.sindquimica.delegate.LoginDelegate;
+import br.com.sindquimica.task.LoginTask;
+import br.developersd3.sindquimica.ws.Usuario;
 import br.com.sindquimica.util.Data;
 
-public class LoginAct extends MLActivity {
+public class LoginAct extends AppCompatActivity implements LoginDelegate{
 
     int MY_REQUEST_CODE = 999;
+
+    Button btnLoginEntrar;
+
+    TextView registrarUsuarioBtn;
+
+    ProgressDialog ringProgressDialog;
+
+    TextView esqueciASenhaBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        registerInteraction();
+
 
          if (ContextCompat.checkSelfPermission(LoginAct.this, Manifest.permission.CAMERA)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -35,68 +45,125 @@ public class LoginAct extends MLActivity {
             ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.CAMERA},
                     MY_REQUEST_CODE);
         }
+
+        registrarInteracao();
+    }
+
+    @Override
+    public void carregaDialog() {
+        ringProgressDialog= ProgressDialog.show(this,"Aguarde...","");
+        ringProgressDialog.show();
+    }
+
+    @Override
+    public void login(Usuario usuario) {
+        ringProgressDialog.dismiss();
+
+        if(usuario != null) {
+
+            Data.insertUsuario(PreferenceManager.getDefaultSharedPreferences(this),usuario);
+
+            if (usuario.getStatus()) {
+                Toast.makeText(this, "Login Realizado com sucesso!", Toast.LENGTH_LONG).show();
+                navToHome();
+
+            }else{
+                Toast.makeText(this, "Usuário Bloqueado!Aguarde o desbloqueio pelo Administrador.", Toast.LENGTH_LONG).show();
+                return;
+            }
+
+        }else{
+            Toast.makeText(this, "Login Inválido!", Toast.LENGTH_LONG).show();
+        }
     }
 
     private void login() {
 
-        String email = ((EditText) f(R.id.editTextUsuario)).getText().toString();
-        String senha = ((EditText) f(R.id.editTextSenha)).getText().toString();
+        String token = Data.getToken(PreferenceManager.getDefaultSharedPreferences(this));
+
+        String email = ((EditText) findViewById(R.id.editTextUsuario)).getText().toString();
+        String senha = ((EditText) findViewById(R.id.editTextSenha)).getText().toString();
 
         if (email == null || email.isEmpty()) {
-            uiToast("Usuário inválido",false);
+            Toast.makeText(this,"Usuário inválido",Toast.LENGTH_LONG).show();
             return;
         }
 
         if (senha == null || senha.isEmpty()) {
-            uiToast("A senha obrigatória",false);
+            Toast.makeText(this,"A senha obrigatória",Toast.LENGTH_LONG).show();
             return;
         }
 
-        OpResponse<Usuario> resp = ProcessServices.getSessionInstance().login(senha,email,Data.getToken(PreferenceManager.getDefaultSharedPreferences(this)), this);
+        Usuario user = new Usuario();
 
-        if (resp.isSuccess() && (resp.getData() != null && resp.getData().getNome() != null)) {
+        user.setLogin(email);
+        user.setPassword(senha);
+        user.setToken(token);
 
-            if(resp.getData().getStatus()) {
+        LoginTask task = new LoginTask(this);
 
-                uiToast("Login realizado com sucesso!", true);
+        task.execute(user);
 
-                NavHome();
-            }else{
-                uiToast("Usuário Bloqueado.Fale com o Administrador!", false);
+    }
+
+    private void registrarInteracao(){
+
+        btnLoginEntrar = (Button) findViewById(R.id.btnLoginEntrar);
+
+        registrarUsuarioBtn = (TextView) findViewById(R.id.registrarUsuarioBtn);
+
+        btnLoginEntrar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                login();
 
             }
-
-        } else {
-            uiToast("Login inválido!",true);
-        }
-
-    }
-
-    private void NavHome() {
-        startActivityClearTask(HomeAct.class);
-    }
-
-    private void NavRegistrar() {
-        startActivityClearTask(UsuarioAct.class);
-    }
-
-    private void navEsqueciSenha()
-    {
-        startActivity(EsqueciSenhaAct.class);
-    }
-
-    private void registerInteraction() {
-
-
-        f(R.id.btnLoginEntrar).setOnClickListener(v -> {
-            queueLoading(R.string.carregando, () -> login());
         });
 
-        f(R.id.registrarUsuarioBtn).setOnClickListener(v -> {
-            NavRegistrar();
+
+        registrarUsuarioBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                navToRegistro();
+
+            }
+        });
+
+        esqueciASenhaBtn = (TextView) findViewById(R.id.esqueciASenhaBtn);
+
+        esqueciASenhaBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                navToEsqueciASenha();
+            }
         });
 
     }
+
+    private void navToEsqueciASenha(){
+
+        Intent i = new Intent(this, EsqueciSenhaAct.class);
+        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        this.startActivity(i);
+    }
+
+
+    private void navToRegistro(){
+
+        Intent i = new Intent(this, UsuarioAct.class);
+        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        this.startActivity(i);
+    }
+
+    private void navToHome(){
+
+        Intent i = new Intent(this, HomeAct.class);
+        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        this.startActivity(i);
+    }
+
 
 }
 

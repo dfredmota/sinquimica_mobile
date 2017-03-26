@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import java.util.List;
 
-import br.com.sindquimica.model.EmpresaAssociada;
+import br.developersd3.sindquimica.ws.EmpresaAssociada;
 
 /**
  * Created by fred on 07/01/17.

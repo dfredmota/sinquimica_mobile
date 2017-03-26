@@ -17,16 +17,51 @@
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.READ_CALENDAR" />
+    <uses-permission android:name="android.permission.WRITE_CALENDAR" />
 
     <application
+        android:name="android.support.multidex.MultiDexApplication"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/logo"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:name="android.support.multidex.MultiDexApplication"
         android:theme="@style/AppTheme">
         <activity
             android:name=".activity.LoginAct"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activity.UsuarioAct"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activity.HomeAct"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".activity.EsqueciSenhaAct"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".activity.ValidarBiometria" />
+        <activity android:name=".activity.ValidaFoto" />
+
+        <service android:name=".notifications.SFireBaseMessagingService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+        <service android:name=".notifications.SFirebaseInstanceIdService">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
+            </intent-filter>
+        </service>
+
+        <activity android:name=".activity.EventoAct" />
+        <activity
+            android:name=".activity.SendMessageAct"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activity.MainActivity"
+            android:label="@string/title_activity_main"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activity.SplashScreen"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -34,25 +69,20 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.UsuarioAct"
-            android:theme="@style/AppTheme.NoActionBar"/>
-        <activity android:name=".activity.HomeAct" android:theme="@style/AppTheme.NoActionBar"/>
-        <activity android:name=".activity.EsqueciSenhaAct"></activity>
-        <activity android:name=".activity.ValidarBiometria" />
-        <activity android:name=".activity.ValidaFoto" />
-
-        <service android:name=".notifications.SFireBaseMessagingService">
-            <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
-            </intent-filter>
-        </service>
-
-        <service android:name=".notifications.SFirebaseInstanceIdService">
-            <intent-filter>
-                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
-            </intent-filter>
-        </service>
-
+        <activity
+            android:name=".activity.EditUsuarioAct"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activity.MsgUsuariosAct"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activity.MensagensGrupoAct"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activity.EventosAct"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".activity.DetalheEventoAct"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

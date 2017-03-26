@@ -1,13 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_esqueci_senha"
+    android:id="@+id/activity_login"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="br.com.sindquimica.activity.EsqueciSenhaAct">
+    android:orientation="vertical"
+    android:background="@color/white">
+
+    <ImageView
+        android:layout_width="140dp"
+        android:layout_height="140dp"
+        android:src="@drawable/logo_login"
+        android:id="@+id/imageViewIcon"
+        android:layout_gravity="center_horizontal"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="15dp" />
+
+    <LinearLayout
+        android:id="@+id/linearlayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingRight="50dp"
+        android:paddingLeft="50dp"
+        android:orientation="vertical"
+        android:layout_alignTop="@+id/imageViewIcon"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="225dp">
+
+        <EditText
+            android:id="@+id/editEmailReenvioSenha"
+            android:paddingLeft="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:background="@drawable/round_shape_edit"
+            android:inputType="text"
+            android:padding="3dp"
+            android:hint="Confirme o email"
+            android:drawablePadding="12dip" />
+
+
+    </LinearLayout>
+
+    <Button
+        android:layout_width="260dp"
+        android:layout_height="wrap_content"
+        android:text="Reenviar Senha"
+        android:textColor="@color/white"
+        android:layout_marginTop="35dp"
+        android:id="@+id/btnReenvioSenha"
+        android:background="@drawable/round_shape_btn"
+        android:layout_below="@+id/linearlayout"
+        android:layout_centerHorizontal="true" />
 
 </RelativeLayout>

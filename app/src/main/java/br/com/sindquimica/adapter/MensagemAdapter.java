@@ -13,11 +13,13 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
 
 import br.com.sindquimica.R;
-import br.com.sindquimica.model.Mensagem;
+
+import br.developersd3.sindquimica.ws.Mensagem;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 
@@ -28,6 +30,8 @@ public class MensagemAdapter extends BaseAdapter {
     Context context;
 
     DateFormat df = DateFormat.getDateInstance(DateFormat.FULL, Locale.getDefault());
+
+    SimpleDateFormat formatAg = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 
     private static LayoutInflater inflater=null;
 
@@ -77,7 +81,7 @@ public class MensagemAdapter extends BaseAdapter {
             holder.descricao.setText(result.get(position).getConteudo());
 
             if(result.get(position).getCreatedAt() != null)
-                holder.data.setText(df.format(result.get(position).getCreatedAt()));
+                holder.data.setText(formatAg.format(result.get(position).getCreatedAt()));
 
             // converte os bytes da imagem na foto do usuario que enviou a msg
 

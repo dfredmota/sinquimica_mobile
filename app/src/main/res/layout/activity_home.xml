@@ -43,6 +43,4 @@
         app:itemTextColor="@color/white"
         app:menu="@menu/grupos_menu" />
 
-
-
 </android.support.v4.widget.DrawerLayout>

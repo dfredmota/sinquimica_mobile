@@ -1,41 +1,52 @@
 package br.com.sindquimica.activity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import java.util.List;
-import br.com.martinlabs.commons.android.MLActivity;
-import br.com.martinlabs.commons.android.OpResponse;
 import br.com.sindquimica.R;
 import br.com.sindquimica.adapter.MensagemAdapter;
-import br.com.sindquimica.model.Grupo;
-import br.com.sindquimica.model.Mensagem;
-import br.com.sindquimica.model.Usuario;
-import br.com.sindquimica.process.ProcessServices;
+import br.com.sindquimica.delegate.GruposDelegate;
+import br.com.sindquimica.delegate.MensagensDelegate;
+import br.com.sindquimica.task.GruposTask;
+import br.com.sindquimica.task.MensagensTask;
+import br.com.sindquimica.util.Data;
+import br.developersd3.sindquimica.ws.Grupo;
+import br.developersd3.sindquimica.ws.Mensagem;
+import br.developersd3.sindquimica.ws.Usuario;
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class HomeAct extends MLActivity implements NavigationView.OnNavigationItemSelectedListener{
+public class HomeAct extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
+        MensagensDelegate,GruposDelegate{
 
     private List<Mensagem> listaMensagens;
     private List<Grupo>    listaGrupos;
     ListView listViewMensagens;
     NavigationView navigationView2;
     NavigationView navigationView1;
+
+    ProgressDialog ringProgressDialog;
+
+    Usuario usuario;
+
+    TextView alertMsg;
 
 
     @Override
@@ -46,6 +57,8 @@ public class HomeAct extends MLActivity implements NavigationView.OnNavigationIt
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("Timeline");
         setSupportActionBar(toolbar);
+
+        alertMsg = (TextView)findViewById(R.id.alertMsg);
 
         final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ImageButton menuLeft = (ImageButton) findViewById(R.id.menuLeft);
@@ -80,61 +93,78 @@ public class HomeAct extends MLActivity implements NavigationView.OnNavigationIt
 
         listViewMensagens = (ListView) findViewById(R.id.list);
 
-        Usuario usuario = ProcessServices.getUsuarioLogado(this);
+        usuario = Data.getUsuario(PreferenceManager.getDefaultSharedPreferences(this));
 
-        if(usuario != null && usuario.getImagem() !=null) {
+        View hView =  navigationView1.getHeaderView(0);
+
+        if(usuario != null){
+
+         TextView nmUsuario = (TextView) hView.findViewById(R.id.nomeUsuario);
+
+            nmUsuario.setText(usuario.getNome());
+
+        }
+
+        if(usuario.getImagem() !=null) {
 
             Bitmap bmp = BitmapFactory.decodeByteArray(usuario.getImagem(), 0, usuario.getImagem().length);
 
-            Bitmap bMapScaled = Bitmap.createScaledBitmap(bmp, 70, 70, true);
+            Bitmap bMapScaled = Bitmap.createScaledBitmap(bmp, 100, 100, true);
 
-            View hView =  navigationView1.getHeaderView(0);
+            hView =  navigationView1.getHeaderView(0);
             CircleImageView nav_user = (CircleImageView)hView.findViewById(R.id.profile_image);
             nav_user.setImageBitmap(bMapScaled);
-        }
 
-        queueLoading(R.string.carregando, () -> carregaMensagens());
-        queueLoading(R.string.carregando, () -> carregaGrupos());
+         }
 
-    }
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                navToSendMessage();
+            }
+        });
 
-    private void carregaGrupos(){
+        MensagensTask taskMsg = new MensagensTask(this);
 
-        Usuario usuario = ProcessServices.getUsuarioLogado(this);
-
-        OpResponse<List<Grupo>> resp = ProcessServices.getSessionInstance().carregaGruposUsuario(this,usuario);
-
-        if (resp.isSuccess())
-        {
-            listaGrupos = resp.getData();
-
-            ui(() -> populateGrupos());
-
-        }
-        else
-        {
-            uiToast(resp);
-        }
+        taskMsg.execute(usuario);
 
     }
 
-    private void carregaMensagens(){
+    @Override
+    public void carregaDialog() {
+        ringProgressDialog= ProgressDialog.show(this,"Aguarde...","");
+        ringProgressDialog.show();
+    }
 
-        Usuario usuario = ProcessServices.getUsuarioLogado(this);
+    @Override
+    public void listouGrupos(List<Grupo> lista) {
+        ringProgressDialog.dismiss();
 
-        OpResponse<List<Mensagem>> resp = ProcessServices.getSessionInstance().carregaMensagensUsuario(this,usuario);
+        if(lista != null && !lista.isEmpty()){
 
-        if (resp.isSuccess())
-        {
-            listaMensagens = resp.getData();
+            this.listaGrupos = lista;
 
-            ui(() -> populateMensagens());
+            populateGrupos();
         }
-        else
-        {
-            uiToast(resp);
+    }
+
+    @Override
+    public void listou(List<Mensagem> lista) {
+        ringProgressDialog.dismiss();
+
+        if(lista != null && !lista.isEmpty()){
+
+            this.listaMensagens = lista;
+
+            populateMensagens();
+        }else{
+            alertMsg.setVisibility(View.VISIBLE);
         }
 
+        GruposTask taskGrupos = new GruposTask(this);
+
+        taskGrupos.execute(usuario);
     }
 
     private void populateGrupos(){
@@ -144,9 +174,17 @@ public class HomeAct extends MLActivity implements NavigationView.OnNavigationIt
             final Menu menu = navigationView2.getMenu();
             for (int i = 0; i < listaGrupos.size(); i++) {
                 menu.add(listaGrupos.get(i).getNome());
+
             }
 
         }
+    }
+
+    private void navToSendMessage(){
+
+        Intent i = new Intent(this, SendMessageAct.class);
+        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        this.startActivity(i);
     }
 
 
@@ -154,10 +192,9 @@ public class HomeAct extends MLActivity implements NavigationView.OnNavigationIt
 
         if(listaMensagens != null && !listaMensagens.isEmpty()){
 
-            MensagemAdapter msgAdapter = new MensagemAdapter(getActivity(),listaMensagens);
+            MensagemAdapter msgAdapter = new MensagemAdapter(this,listaMensagens);
 
             listViewMensagens.setAdapter(msgAdapter);
-
         }
     }
 
@@ -199,22 +236,86 @@ public class HomeAct extends MLActivity implements NavigationView.OnNavigationIt
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_almoxarifado) {
+        boolean isMenuGrupo = false;
 
+        if(listaGrupos != null && !listaGrupos.isEmpty()){
 
+            for(Grupo grupo : listaGrupos){
+
+                if(grupo.getNome().equalsIgnoreCase(item.getTitle().toString())){
+
+                    isMenuGrupo = true;
+
+                    Data.insertGrupo(PreferenceManager.getDefaultSharedPreferences(this),grupo);
+                    break;
+                }
+
+            }
+        }
+
+        if(isMenuGrupo){
+
+            timeLineGrupo();
+        }
+
+        if (id == R.id.nav_perfil) {
+
+            navToEditarUsuario();
 
         } else if (id == R.id.nav_sair) {
 
-            finish();
+            Data.loggoutUsuario(PreferenceManager.getDefaultSharedPreferences(this));
 
-            android.os.Process.killProcess(android.os.Process.myPid());
-            super.onDestroy();
+            navToSplashScreen();
+
+        }else if (id == R.id.nav_timeline) {
+
+            navToHome();
+
+        }else if (id == R.id.nav_eventos) {
+
+            navToEventos();
 
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void navToSplashScreen(){
+
+        Intent i = new Intent(this, SplashScreen.class);
+        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        this.startActivity(i);
+    }
+
+    private void navToEventos(){
+
+        Intent i = new Intent(this, EventosAct.class);
+        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        this.startActivity(i);
+    }
+
+    private void navToHome(){
+
+        Intent i = new Intent(this, HomeAct.class);
+        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        this.startActivity(i);
+    }
+
+    private void timeLineGrupo(){
+
+        Intent i = new Intent(this, MensagensGrupoAct.class);
+        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        this.startActivity(i);
+    }
+
+    private void navToEditarUsuario(){
+
+        Intent i = new Intent(this, EditUsuarioAct.class);
+        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        this.startActivity(i);
     }
 
 //    @Override
@@ -236,4 +337,9 @@ public class HomeAct extends MLActivity implements NavigationView.OnNavigationIt
 //    }
 
 
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        Toast.makeText(this,item.getTitle(),Toast.LENGTH_LONG).show();
+        return super.onContextItemSelected(item);
+    }
 }

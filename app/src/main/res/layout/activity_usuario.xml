@@ -16,7 +16,7 @@
         app:title="Registrar-se">
 
         <ImageView
-            android:id="@+id/btnPersistParceiro"
+            android:id="@+id/btnPersistUsuario"
             android:src="@drawable/ic_done_white_24dp"
             android:layout_width="35dp"
             android:layout_height="35dp"
@@ -47,6 +47,9 @@
                 android:src="@drawable/ic_person_white_24dp"
                 android:layout_height="70dp"
                 android:clickable="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="20dp"
+                android:background="@color/black"
                 android:layout_marginLeft="40dp" />
 
             <TextView
@@ -55,7 +58,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:layout_below="@id/fotoUsuario"
-                android:text="Empresa Associada: "
+                android:text="*Empresa Associada: "
                 android:textColor="@color/black"
                 android:textSize="14dp" />
 
@@ -76,7 +79,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/black"
-                android:text="Nome: "
+                android:text="*Nome: "
                 android:layout_marginTop="20dp"
                 android:layout_below="@+id/spinnerEmpresa"
                 />
@@ -88,6 +91,7 @@
                 android:layout_height="wrap_content"
                 android:textSize="14sp"
                 android:imeOptions="actionUnspecified"
+                android:inputType="text"
                 android:textColor="@color/black"
                 android:textColorHint="@color/black"
                 android:textColorLink="@color/colorPrimaryDark"
@@ -98,7 +102,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/black"
-                android:text="Data de Nascimento"
+                android:text="*Data de Nascimento"
                 android:layout_marginTop="20dp"
                 android:layout_below="@+id/editNome"/>
 
@@ -108,6 +112,7 @@
                 android:layout_width="match_parent"
                 android:ellipsize="start"
                 android:textSize="14sp"
+                android:inputType="number"
                 android:imeOptions="actionUnspecified"
                 android:textColor="@color/black"
                 android:textColorHint="@color/black"
@@ -121,7 +126,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:textColor="@color/black"
-                android:text="Email: "
+                android:text="*Email: "
                 android:layout_below="@+id/editDtNascimento"/>
 
             <EditText
@@ -135,7 +140,7 @@
                 android:textColorHint="@color/black"
                 android:textColorLink="@color/colorPrimaryDark"
                 android:layout_height="wrap_content"
-                android:inputType="text"
+                android:inputType="textEmailAddress"
                 android:layout_below="@id/textEmail"/>
 
             <TextView
@@ -153,6 +158,7 @@
                 android:layout_width="match_parent"
                 android:ellipsize="start"
                 android:textSize="14sp"
+                android:inputType="number"
                 android:imeOptions="actionUnspecified"
                 android:textColor="@color/black"
                 android:textColorHint="@color/black"
@@ -167,7 +173,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:layout_below="@id/editTelefone"
-                android:text="Celular: "
+                android:text="*Celular: "
                 android:textColor="@color/black"
                 android:textSize="14dp" />
 
@@ -177,6 +183,7 @@
                 android:layout_width="match_parent"
                 android:ellipsize="start"
                 android:textSize="14sp"
+                android:inputType="number"
                 android:imeOptions="actionUnspecified"
                 android:textColor="@color/black"
                 android:textColorHint="@color/black"
@@ -192,7 +199,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:layout_below="@id/editCelular"
-                android:text="Nome para Login: "
+                android:text="*Nome para Login: "
                 android:textColor="@color/black"
                 android:textSize="14dp" />
 
@@ -204,6 +211,7 @@
                 android:textSize="14sp"
                 android:imeOptions="actionUnspecified"
                 android:textColor="@color/black"
+                android:inputType="text"
                 android:textColorHint="@color/black"
                 android:textColorLink="@color/colorPrimaryDark"
                 android:layout_height="wrap_content"
@@ -216,7 +224,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:textColor="@color/black"
-                android:text="Escolha uma Senha:"
+                android:text="*Escolha uma Senha:"
                 android:layout_below="@+id/editLogin"/>
 
             <EditText
@@ -225,12 +233,12 @@
                 android:layout_width="match_parent"
                 android:ellipsize="start"
                 android:textSize="14sp"
+                android:inputType="textPassword"
                 android:imeOptions="actionUnspecified"
                 android:textColor="@color/black"
                 android:textColorHint="@color/black"
                 android:textColorLink="@color/colorPrimaryDark"
                 android:layout_height="wrap_content"
-                android:inputType="date"
                 android:layout_below="@+id/dtSenha"/>
 
             <TextView
@@ -239,7 +247,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:textColor="@color/black"
-                android:text="Confirme a Senha"
+                android:text="*Confirme a Senha"
                 android:layout_below="@+id/editSenha"/>
 
             <EditText
@@ -248,12 +256,12 @@
                 android:layout_width="match_parent"
                 android:ellipsize="start"
                 android:textSize="14sp"
+                android:inputType="textPassword"
                 android:imeOptions="actionUnspecified"
                 android:textColor="@color/black"
                 android:textColorHint="@color/black"
                 android:textColorLink="@color/colorPrimaryDark"
                 android:layout_height="wrap_content"
-                android:inputType="number"
                 android:layout_below="@id/textConfirmeAsenha"/>
 
             <LinearLayout
@@ -324,7 +332,7 @@
                 android:textColorHint="@color/black"
                 android:textColorLink="@color/colorPrimaryDark"
                 android:layout_height="wrap_content"
-                android:inputType="number"
+                android:inputType="text"
                 android:layout_below="@+id/textNumero"/>
 
             <TextView
@@ -416,7 +424,7 @@
                 android:textColorHint="@color/black"
                 android:textColorLink="@color/colorPrimaryDark"
                 android:layout_height="wrap_content"
-                android:inputType="text"
+                android:inputType="number"
                 android:layout_below="@+id/textCep"/>
 
         </RelativeLayout>

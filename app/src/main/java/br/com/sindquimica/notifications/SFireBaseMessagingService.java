@@ -14,6 +14,7 @@ import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
 import br.com.sindquimica.R;
+import br.com.sindquimica.activity.EventosAct;
 import br.com.sindquimica.activity.HomeAct;
 
 /**
@@ -21,6 +22,9 @@ import br.com.sindquimica.activity.HomeAct;
  */
 
 public class SFireBaseMessagingService extends FirebaseMessagingService {
+
+
+    int notificationId = 1 ;
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
@@ -43,19 +47,29 @@ public class SFireBaseMessagingService extends FirebaseMessagingService {
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(this,0,intent,PendingIntent.FLAG_ONE_SHOT);
 
+
+        Intent intent2 = new Intent(this, EventosAct.class);
+
+        intent2.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        PendingIntent pendingIntent2 = PendingIntent.getActivity(this,0,intent2,PendingIntent.FLAG_ONE_SHOT);
+
         Uri sound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 
         NotificationCompat.Builder n2 = new NotificationCompat.Builder(this);
 
-        n2.setSmallIcon(R.drawable.ic_person_white_24dp);
+        n2.setSmallIcon(R.drawable.logo);
         n2.setContentTitle(title);
         n2.setContentText(body);
         n2.setAutoCancel(true);
         n2.setSound(sound);
+
+        if(body.equalsIgnoreCase("Você tem uma Nova Mensagem!"))
         n2.setContentIntent(pendingIntent);
+        else if(body.equalsIgnoreCase("Você tem um Novo Evento!") || body.equalsIgnoreCase("Cancelamento de Evento!"))
+        n2.setContentIntent(pendingIntent2);
 
         NotificationManager notificationManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.notify(0,n2.build());
+        notificationManager.notify(notificationId,n2.build());
 
     }
 }

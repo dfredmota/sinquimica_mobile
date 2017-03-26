@@ -12,6 +12,17 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:showIn="@layout/app_bar_home">
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="25sp"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="50dp"
+        android:id="@+id/alertMsg"
+        android:visibility="invisible"
+        android:text="Não há mensagens no momento!"/>
 
     <View
         android:id="@+id/viewLoginBottom"

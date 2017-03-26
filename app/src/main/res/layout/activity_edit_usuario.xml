@@ -1,0 +1,409 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.Toolbar
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/verdeClaro"
+        android:id="@+id/toolbar"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:title="Alterar Dados">
+
+        <ImageView
+            android:id="@+id/btnPersistUsuario"
+            android:src="@drawable/ic_done_white_24dp"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_margin="10dp"
+            android:layout_gravity="right" />
+
+
+    </android.support.v7.widget.Toolbar>
+
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:background="@color/white">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:background="@color/white"
+            android:orientation="vertical"
+            android:weightSum="1">
+
+            <ImageView
+                android:id="@+id/fotoUsuario"
+                android:layout_width="70dp"
+                android:src="@drawable/ic_person_white_24dp"
+                android:layout_height="70dp"
+                android:clickable="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="20dp"
+                android:background="@color/black"
+                android:layout_marginLeft="40dp" />
+
+            <TextView
+                android:id="@+id/textNome"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:text="*Nome: "
+                android:layout_marginTop="20dp"
+                android:layout_below="@+id/fotoUsuario"
+                />
+
+            <EditText
+                android:id="@+id/editNome"
+                android:layout_gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:imeOptions="actionUnspecified"
+                android:inputType="text"
+                android:textColor="@color/black"
+                android:textColorHint="@color/black"
+                android:textColorLink="@color/colorPrimaryDark"
+                android:layout_below="@+id/textNome"/>
+
+            <TextView
+                android:id="@+id/textDtNascimento"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:text="*Data de Nascimento"
+                android:layout_marginTop="20dp"
+                android:layout_below="@+id/editNome"/>
+
+            <EditText
+                android:id="@+id/editDtNascimento"
+                android:layout_gravity="center"
+                android:layout_width="match_parent"
+                android:ellipsize="start"
+                android:textSize="14sp"
+                android:inputType="number"
+                android:imeOptions="actionUnspecified"
+                android:textColor="@color/black"
+                android:textColorHint="@color/black"
+                android:textColorLink="@color/colorPrimaryDark"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/textDtNascimento"/>
+
+            <TextView
+                android:id="@+id/textEmail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:textColor="@color/black"
+                android:text="*Email: "
+                android:layout_below="@+id/editDtNascimento"/>
+
+            <EditText
+                android:id="@+id/editEmail"
+                android:layout_gravity="center"
+                android:layout_width="match_parent"
+                android:ellipsize="start"
+                android:textSize="14sp"
+                android:imeOptions="actionUnspecified"
+                android:textColor="@color/black"
+                android:textColorHint="@color/black"
+                android:textColorLink="@color/colorPrimaryDark"
+                android:layout_height="wrap_content"
+                android:inputType="textEmailAddress"
+                android:layout_below="@id/textEmail"/>
+
+            <TextView
+                android:id="@+id/textTelefone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:textColor="@color/black"
+                android:text="Telefone"
+                android:layout_below="@+id/editEmail"/>
+
+            <EditText
+                android:id="@+id/editTelefone"
+                android:layout_gravity="center"
+                android:layout_width="match_parent"
+                android:ellipsize="start"
+                android:textSize="14sp"
+                android:inputType="number"
+                android:imeOptions="actionUnspecified"
+                android:textColor="@color/black"
+                android:textColorHint="@color/black"
+                android:textColorLink="@color/colorPrimaryDark"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/textTelefone"/>
+
+
+            <TextView
+                android:id="@+id/textCelular"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_below="@id/editTelefone"
+                android:text="*Celular: "
+                android:textColor="@color/black"
+                android:textSize="14dp" />
+
+            <EditText
+                android:id="@+id/editCelular"
+                android:layout_gravity="center"
+                android:layout_width="match_parent"
+                android:ellipsize="start"
+                android:textSize="14sp"
+                android:inputType="number"
+                android:imeOptions="actionUnspecified"
+                android:textColor="@color/black"
+                android:textColorHint="@color/black"
+                android:textColorLink="@color/colorPrimaryDark"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/textCelular"/>
+
+            <TextView
+                android:id="@+id/textLogin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_below="@id/editCelular"
+                android:text="*Nome para Login: "
+                android:textColor="@color/black"
+                android:textSize="14dp" />
+
+            <EditText
+                android:id="@+id/editLogin"
+                android:layout_gravity="center"
+                android:layout_width="match_parent"
+                android:ellipsize="start"
+                android:textSize="14sp"
+                android:imeOptions="actionUnspecified"
+                android:textColor="@color/black"
+                android:inputType="text"
+                android:textColorHint="@color/black"
+                android:textColorLink="@color/colorPrimaryDark"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/textLogin"/>
+
+
+            <TextView
+                android:id="@+id/dtSenha"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:textColor="@color/black"
+                android:text="*Escolha uma Senha:"
+                android:layout_below="@+id/editLogin"/>
+
+            <EditText
+                android:id="@+id/editSenha"
+                android:layout_gravity="center"
+                android:layout_width="match_parent"
+                android:ellipsize="start"
+                android:textSize="14sp"
+                android:inputType="textPassword"
+                android:imeOptions="actionUnspecified"
+                android:textColor="@color/black"
+                android:textColorHint="@color/black"
+                android:textColorLink="@color/colorPrimaryDark"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/dtSenha"/>
+
+            <TextView
+                android:id="@+id/textConfirmeAsenha"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:textColor="@color/black"
+                android:text="*Confirme a Senha"
+                android:layout_below="@+id/editSenha"/>
+
+            <EditText
+                android:id="@+id/editConfirmeASenha"
+                android:layout_gravity="center"
+                android:layout_width="match_parent"
+                android:ellipsize="start"
+                android:textSize="14sp"
+                android:inputType="textPassword"
+                android:imeOptions="actionUnspecified"
+                android:textColor="@color/black"
+                android:textColorHint="@color/black"
+                android:textColorLink="@color/colorPrimaryDark"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/textConfirmeAsenha"/>
+
+            <LinearLayout
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:fitsSystemWindows="true"
+                android:background="@color/cinzaClaro"
+                android:id="@+id/layoutEndereco"
+                android:layout_marginTop="15dp"
+                android:layout_below="@id/editConfirmeASenha"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/textEndereço"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:textColor="@color/black"
+                    android:text="Endereço"
+                    android:layout_below="@id/editEmail"/>
+
+
+            </LinearLayout>
+
+
+            <TextView
+                android:id="@+id/textLogradouro"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:textColor="@color/black"
+                android:text="Logradouro"
+                android:layout_below="@id/layoutEndereco"/>
+
+            <EditText
+                android:id="@+id/editLogradouro"
+                android:layout_gravity="center"
+                android:layout_width="match_parent"
+                android:ellipsize="start"
+                android:textSize="14sp"
+                android:imeOptions="actionUnspecified"
+                android:textColor="@color/black"
+                android:textColorHint="@color/black"
+                android:textColorLink="@color/colorPrimaryDark"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:layout_below="@+id/textLogradouro"/>
+
+            <TextView
+                android:id="@+id/textNumero"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:textColor="@color/black"
+                android:text="Numero:"
+                android:layout_below="@+id/editLogradouro"/>
+
+            <EditText
+                android:id="@+id/editNumero"
+                android:layout_gravity="center"
+                android:layout_width="match_parent"
+                android:ellipsize="start"
+                android:textSize="14sp"
+                android:imeOptions="actionUnspecified"
+                android:textColor="@color/black"
+                android:textColorHint="@color/black"
+                android:textColorLink="@color/colorPrimaryDark"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:layout_below="@+id/textNumero"/>
+
+            <TextView
+                android:id="@+id/textComplemento"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:textColor="@color/black"
+                android:text="Complemento"
+                android:layout_below="@+id/editNumero"/>
+
+            <EditText
+                android:id="@+id/editComplemento"
+                android:layout_gravity="center"
+                android:layout_width="match_parent"
+                android:ellipsize="start"
+                android:textSize="14sp"
+                android:imeOptions="actionUnspecified"
+                android:textColor="@color/black"
+                android:textColorHint="@color/black"
+                android:textColorLink="@color/colorPrimaryDark"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:layout_below="@+id/textComplemento"/>
+
+            <TextView
+                android:id="@+id/textBairro"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:textColor="@color/black"
+                android:text="Bairro"
+                android:layout_below="@id/editComplemento"/>
+
+            <EditText
+                android:id="@+id/editBairro"
+                android:layout_gravity="center"
+                android:layout_width="match_parent"
+                android:ellipsize="start"
+                android:textSize="14sp"
+                android:imeOptions="actionUnspecified"
+                android:textColor="@color/black"
+                android:textColorHint="@color/black"
+                android:textColorLink="@color/colorPrimaryDark"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:layout_below="@+id/textBairro"/>
+
+            <TextView
+                android:id="@+id/textCidade"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:textColor="@color/black"
+                android:text="Cidade"
+                android:layout_below="@+id/editBairro"/>
+
+            <EditText
+                android:id="@+id/editCidade"
+                android:layout_gravity="center"
+                android:layout_width="match_parent"
+                android:ellipsize="start"
+                android:textSize="14sp"
+                android:imeOptions="actionUnspecified"
+                android:textColor="@color/black"
+                android:textColorHint="@color/black"
+                android:textColorLink="@color/colorPrimaryDark"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:layout_below="@+id/textCidade"/>
+
+            <TextView
+                android:id="@+id/textCep"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:textColor="@color/black"
+                android:text="Cep"
+                android:layout_below="@+id/editCidade"/>
+
+            <EditText
+                android:id="@+id/editCep"
+                android:layout_gravity="center"
+                android:layout_width="match_parent"
+                android:ellipsize="start"
+                android:textSize="14sp"
+                android:imeOptions="actionUnspecified"
+                android:textColor="@color/black"
+                android:textColorHint="@color/black"
+                android:textColorLink="@color/colorPrimaryDark"
+                android:layout_height="wrap_content"
+                android:inputType="number"
+                android:layout_below="@+id/textCep"/>
+
+        </RelativeLayout>
+
+    </ScrollView>
+</LinearLayout>

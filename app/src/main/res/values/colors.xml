@@ -16,4 +16,5 @@
     <color name="estadoPositivoParceiro">#4caf50</color>
     <color name="estadoNegativoParceiro">#ce100b</color>
     <color name="estadoAtencaoParceiro">#ffea00</color>
+    <color name="cinzaEscuro">#7b7579</color>
 </resources>

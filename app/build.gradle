@@ -2,11 +2,12 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 24
-    buildToolsVersion '25.0.0'
+    buildToolsVersion "24.0.0"
     defaultConfig {
         applicationId "br.com.sindquimica"
+        useLibrary 'org.apache.http.legacy'
         minSdkVersion 15
-        targetSdkVersion 25
+        targetSdkVersion 24
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -21,52 +22,38 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    dexOptions {
+        javaMaxHeapSize "4g"
+    }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
 }
 
-buildscript {
-    repositories {
-        mavenCentral()
-    }
-
-    dependencies {
-        classpath 'me.tatarka:gradle-retrolambda:3.2.4'
-        classpath 'com.google.gms:google-services:3.0.0'
-    }
-
-
-}
-
-repositories {
-    mavenCentral()
-}
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile 'com.android.support:appcompat-v7:25.1.0'
-    testCompile 'junit:junit:4.12'
-    compile project(path: ':commons')
-    compile 'com.github.kevinsawicki:http-request:6.0'
-    compile 'uk.co.chrisjenx:calligraphy:2.1.0'
-    compile 'com.google.code.gson:gson:2.2.4'
-    compile 'de.hdodenhof:circleimageview:2.1.0'
-    compile 'com.google.android.gms:play-services:9.4.0'
-    compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
-    compile 'com.mikhaellopez:circularprogressbar:1.1.1'
-    compile 'com.android.support:design:24.0.0-beta1'
     compile 'com.android.support:multidex:1.0.1'
-    compile 'com.android.support:cardview-v7:21.0.+'
-    compile 'com.android.support:recyclerview-v7:22.2.1'
-    compile 'com.makeramen:roundedimageview:2.3.0'
-    compile 'com.google.gms:google-services:3.0.0'
+    compile 'com.android.support:appcompat-v7:24.0.0'
+    compile 'com.android.support:design:24.0.0'
+    compile 'com.android.support:cardview-v7:21.0.0'
+    compile 'de.hdodenhof:circleimageview:2.1.0'
+    compile 'com.google.code.gson:gson:2.2.4'
+    compile 'com.sun.mail:android-mail:1.5.5'
+    compile 'com.sun.mail:android-activation:1.5.5'
+    compile 'com.wdullaer:materialdatetimepicker:1.4.1'
+    compile 'com.google.android.gms:play-services:9.0.1'
     compile 'com.google.firebase:firebase-core:9.0.0'
-    compile 'com.google.firebase:firebase-messaging:9.4.0'
+    compile 'com.google.firebase:firebase-messaging:9.0.0'
+    compile group: 'org.apache.httpcomponents' , name: 'httpclient-android' , version: '4.3.5.1'
+    testCompile 'junit:junit:4.12'
+    compile files('libs/sindquimica.jar')
+    compile files('libs/postgresql-9.4-1201-jdbc41.jar')
 }
 
 apply plugin: 'com.google.gms.google-services'

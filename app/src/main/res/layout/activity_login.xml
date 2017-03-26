@@ -80,4 +80,17 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="25dp" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Esqueci a Senha"
+        android:textSize="16sp"
+        android:textColor="@color/verdeClaro"
+        android:id="@+id/esqueciASenhaBtn"
+        android:clickable="true"
+        android:padding="10dp"
+        android:layout_below="@+id/registrarUsuarioBtn"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="25dp" />
+
 </RelativeLayout>
