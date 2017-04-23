@@ -108,6 +108,8 @@ public class DetalheEventoAct extends AppCompatActivity implements ConfirmaPrese
 
             if(evento.getConfirmou() != null && evento.getConfirmou()){
 
+                btnConfirmarPresenca.setVisibility(View.INVISIBLE);
+
                 AlertDialog.Builder builder = new AlertDialog.Builder(DetalheEventoAct.this);
 
                 builder.setMessage("Você já confirmou presença nesse evento.Obrigado!")

@@ -107,7 +107,7 @@
             android:id="@+id/txt_statusEvento"
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
-            android:text="Status: "
+            android:text="Status do Evento: "
             android:textColor="@color/black"
             android:textSize="14dp"
             android:layout_below="@id/txt_data_fim_evento"

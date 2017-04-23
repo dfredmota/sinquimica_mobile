@@ -36,7 +36,7 @@ public class SplashScreen extends AppCompatActivity implements AtualizaTokenDele
 
                 String token = Data.getToken(PreferenceManager.getDefaultSharedPreferences(this));
 
-                if(token.equals(usuarioLogado.getToken())) {
+                if(usuarioLogado.getToken() != null && token.equals(usuarioLogado.getToken())) {
                     navToHome();
                 }else{
                     usuarioLogado.setToken(token);

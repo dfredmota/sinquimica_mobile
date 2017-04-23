@@ -37,7 +37,7 @@ public class EsqueciSenhaAct extends AppCompatActivity implements ReenvioSenhaDe
             @Override
             public void onClick(View view) {
 
-                String emailT = email.getText().toString();
+                String emailT = email.getText().toString().trim();
 
                 if(!isValidEmail(emailT)){
                     Toast.makeText(EsqueciSenhaAct.this, "Digite um email válido!", Toast.LENGTH_LONG).show();
