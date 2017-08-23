@@ -8,9 +8,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:565384452699:android:bea16be24631e6aa",
+        "mobilesdk_app_id": "1:565384452699:android:c6707bc4ee8c7c4d",
         "android_client_info": {
-          "package_name": "br.com.sindquimica"
+          "package_name": "br.com.sindquimicace"
         }
       },
       "oauth_client": [

@@ -4,7 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/commons/commons.iml" filepath="$PROJECT_DIR$/commons/commons.iml" />
-      <module fileurl="file://$PROJECT_DIR$/sindquimica.iml" filepath="$PROJECT_DIR$/sindquimica.iml" />
+      <module fileurl="file://$PROJECT_DIR$/sindquimica_app.iml" filepath="$PROJECT_DIR$/sindquimica_app.iml" />
     </modules>
   </component>
 </project>

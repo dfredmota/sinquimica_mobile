@@ -4,17 +4,15 @@ android {
     compileSdkVersion 24
     buildToolsVersion "24.0.0"
     defaultConfig {
-        applicationId "br.com.sindquimica"
+        applicationId "br.com.sindquimicace"
         useLibrary 'org.apache.http.legacy'
         minSdkVersion 15
         targetSdkVersion 24
-        versionCode 1
-        versionName "1.0"
+        versionCode 5
+        versionName "5.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
-        jackOptions {
-            enabled true
-        }
+
     }
     buildTypes {
         release {
@@ -26,10 +24,7 @@ android {
         javaMaxHeapSize "4g"
     }
 
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
+
 }
 
 
@@ -50,9 +45,8 @@ dependencies {
     compile 'com.google.android.gms:play-services:9.0.1'
     compile 'com.google.firebase:firebase-core:9.0.0'
     compile 'com.google.firebase:firebase-messaging:9.0.0'
-    compile group: 'org.apache.httpcomponents' , name: 'httpclient-android' , version: '4.3.5.1'
+    compile 'org.apache.httpcomponents:httpclient-android:4.3.5.1'
     testCompile 'junit:junit:4.12'
-    compile files('libs/sindquimica.jar')
     compile files('libs/postgresql-9.4-1201-jdbc41.jar')
 }
 
