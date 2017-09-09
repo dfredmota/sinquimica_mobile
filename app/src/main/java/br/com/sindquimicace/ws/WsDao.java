@@ -144,7 +144,7 @@ public class WsDao {
 		 
 		 try {
 		 
-        String sql = "update evento_usuario set confirmou=?,visualizou=? where evento_id="+evento.getId()+
+        String sql = "update evento_usuario set confirmou=? where evento_id="+evento.getId()+
         		" and usuario_id="+evento.getIdUsuarioConfirmou();
 		
         con = DataConnect.getConnection();
@@ -155,8 +155,6 @@ public class WsDao {
         ps.setInt(1, 1);
         else
        	ps.setInt(1, 2);
-        
-        ps.setBoolean(2, true);
         
         System.out.println(ps);
         
@@ -1170,6 +1168,47 @@ public class WsDao {
 		}
 		return evento;
 		
+
+	}
+
+
+	public static void visualizouEvento(Evento evento){
+
+		PreparedStatement ps = null;
+		Connection con = null;
+		ResultSet rs = null;
+
+		try {
+
+			String sql = "update evento_usuario set visualizou=? where evento_id="+evento.getId()+
+					" and usuario_id="+evento.getIdUsuarioConfirmou();
+
+			con = DataConnect.getConnection();
+
+			ps = con.prepareStatement(sql);
+
+			ps.setBoolean(1, true);
+
+			ps.executeUpdate();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (ps != null)
+					ps.close();
+				if (con != null)
+					con.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+		}
+
 
 	}
 	

@@ -34,6 +34,9 @@ public class EventoByIdTask extends AsyncTask<Integer[], Integer[], Evento> {
 
             evento = ws.listaEventoUsuario(params[0]);
 
+            // entrou  na tela de detalhes entao visualizou o evento
+            ws.visualizouEvento(evento);
+
         }catch(Exception e){
             e.printStackTrace();
         }

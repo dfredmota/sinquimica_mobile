@@ -8,8 +8,8 @@ android {
         useLibrary 'org.apache.http.legacy'
         minSdkVersion 15
         targetSdkVersion 24
-        versionCode 6
-        versionName "6.0"
+        versionCode 7
+        versionName "7.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
 
