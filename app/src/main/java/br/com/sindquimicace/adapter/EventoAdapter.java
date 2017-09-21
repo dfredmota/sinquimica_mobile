@@ -68,6 +68,7 @@ public class EventoAdapter extends BaseAdapter {
         TextView  local;
         TextView  dataInicioEvento;
         TextView  dataFimEvento;
+        TextView  status;
         Button    btnDetalhe;
 
     }
@@ -84,6 +85,7 @@ public class EventoAdapter extends BaseAdapter {
             holder.local = (TextView) rowView.findViewById(R.id.local);
             holder.dataInicioEvento = (TextView) rowView.findViewById(R.id.dataInicioEvento);
             holder.dataFimEvento = (TextView) rowView.findViewById(R.id.dataFimEvento);
+            holder.status = (TextView) rowView.findViewById(R.id.status);
             holder.btnDetalhe = (Button) rowView.findViewById(R.id.btnDetalhe);
 
             holder.descricao.setText(result.get(position).getDescricao());
@@ -91,6 +93,12 @@ public class EventoAdapter extends BaseAdapter {
             holder.dataInicioEvento.setText(formatAg.format(result.get(position).getInicio()));
             holder.dataFimEvento.setText(formatAg.format(result.get(position).getFim()));
 
+
+            if(result.get(position).getStatus() == null || !result.get(position).getStatus()){
+                holder.status.setText("CANCELADO");
+            }else{
+                holder.status.setText("CONFIRMADO");
+            }
 
             holder.btnDetalhe.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -103,6 +111,10 @@ public class EventoAdapter extends BaseAdapter {
 
                 }
             });
+
+            if(result.get(position).getStatus() != null && result.get(position).getStatus() == false){
+                holder.btnDetalhe.setVisibility(View.GONE);
+            }
 
             rowView.setTag(holder);
 
