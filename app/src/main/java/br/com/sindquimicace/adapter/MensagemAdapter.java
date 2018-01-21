@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -34,12 +35,12 @@ public class MensagemAdapter extends BaseAdapter {
 
     SimpleDateFormat formatAg = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 
-    private static LayoutInflater inflater=null;
+    private static LayoutInflater inflater = null;
 
-    public MensagemAdapter(Context mainActivity,List<Mensagem> comissoes) {
-        result=comissoes;
-        context=mainActivity;
-        inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    public MensagemAdapter(Context mainActivity, List<Mensagem> comissoes) {
+        result = comissoes;
+        context = mainActivity;
+        inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
     @Override
@@ -57,10 +58,10 @@ public class MensagemAdapter extends BaseAdapter {
         return position;
     }
 
-    public class Holder
-    {
+    public class Holder {
         TextView descricao;
         TextView data;
+        TextView usuario;
         CircleImageView imagemUsuario;
 
     }
@@ -68,46 +69,42 @@ public class MensagemAdapter extends BaseAdapter {
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-        Holder holder=new Holder();
-        View rowView = convertView;
 
-        if (rowView == null) {
+        Holder holder = new Holder();
 
-            rowView = inflater.inflate(R.layout.li_mensagem, null);
-            holder.descricao = (TextView) rowView.findViewById(R.id.mensagem);
-            holder.data = (TextView) rowView.findViewById(R.id.data_mensagem);
+        convertView = inflater.inflate(R.layout.li_mensagem, null);
+        holder.descricao = (TextView) convertView.findViewById(R.id.mensagem);
+        holder.data = (TextView) convertView.findViewById(R.id.data_mensagem);
+        holder.usuario = (TextView) convertView.findViewById(R.id.usuario_mensagem);
 
-            holder.imagemUsuario = (CircleImageView) rowView.findViewById(R.id.foto_usuario_msg);
+        holder.imagemUsuario = (CircleImageView) convertView.findViewById(R.id.foto_usuario_msg);
 
-            holder.descricao.setText(result.get(position).getConteudo());
+        holder.descricao.setText(result.get(position).getConteudo());
 
-            if(result.get(position).getCreatedAt() != null)
-                holder.data.setText(formatAg.format(result.get(position).getCreatedAt()));
+        holder.usuario.setText(result.get(position).getUsuario().getNome());
 
-            // converte os bytes da imagem na foto do usuario que enviou a msg
+        if (result.get(position).getCreatedAt() != null)
+            holder.data.setText(formatAg.format(result.get(position).getCreatedAt()));
 
-            if(result.get(position).getUsuario() != null && result.get(position).getUsuario()
-                    .getImagem() != null){
+        // converte os bytes da imagem na foto do usuario que enviou a msg
 
-               Bitmap bmp = BitmapFactory.decodeByteArray(result.get(position).getUsuario()
-                       .getImagem(), 0, result.get(position).getUsuario()
-                       .getImagem().length);
+        if (result.get(position).getUsuario() != null && result.get(position).getUsuario()
+                .getImagem() != null) {
 
-               Bitmap bMapScaled = Bitmap.createScaledBitmap(bmp, 70, 70, true);
+            Bitmap bmp = BitmapFactory.decodeByteArray(result.get(position).getUsuario()
+                    .getImagem(), 0, result.get(position).getUsuario()
+                    .getImagem().length);
 
-               holder.imagemUsuario.setImageBitmap(bMapScaled);
+            Bitmap bMapScaled = Bitmap.createScaledBitmap(bmp, 70, 70, true);
 
-            }
+            holder.imagemUsuario.setImageBitmap(bMapScaled);
 
-
-            rowView.setTag(holder);
-
-        }else {
-            holder= (Holder) convertView.getTag();
-            holder.descricao.setText(result.get(position).getConteudo());
         }
 
-        return rowView;
+
+        convertView.setTag(holder);
+
+        return convertView;
     }
 
 }

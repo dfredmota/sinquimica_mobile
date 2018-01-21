@@ -424,7 +424,7 @@ public class WsDao {
 
 		try {
 			con = DataConnect.getConnection();
-			ps = con.prepareStatement("Select * from empresa_associada where deleted_at is null");
+			ps = con.prepareStatement("Select * from empresa_associada where deleted_at is null order by nome_fantasia asc");
 
 			ResultSet rs = ps.executeQuery();
 			
