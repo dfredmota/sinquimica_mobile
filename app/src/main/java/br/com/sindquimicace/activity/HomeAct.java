@@ -184,6 +184,9 @@ public class HomeAct extends AppCompatActivity implements NavigationView.OnNavig
 
         Intent i = new Intent(this, SendMessageAct.class);
         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+        i.putExtra("tipo","u");
+
         this.startActivity(i);
     }
 

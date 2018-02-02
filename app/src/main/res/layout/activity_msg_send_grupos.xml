@@ -13,7 +13,7 @@
         android:background="@color/verdeClaro"
         android:id="@+id/toolbar"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        app:title="Selecione os Usuários">
+        app:title="Selecione os Grupos">
 
         <ImageView
             android:id="@+id/btnEnviar"
@@ -25,12 +25,12 @@
 
     </android.support.v7.widget.Toolbar>
 
-            <ListView
-                android:id="@+id/listView1"
-                android:layout_width="match_parent"
-                android:layout_height="600dp"
-                android:scrollbars="vertical"
-                android:layout_marginTop="60dip">
-            </ListView>
+    <ListView
+        android:id="@+id/listView2"
+        android:layout_width="match_parent"
+        android:layout_height="600dp"
+        android:scrollbars="vertical"
+        android:layout_marginTop="60dip">
+    </ListView>
 
 </RelativeLayout>

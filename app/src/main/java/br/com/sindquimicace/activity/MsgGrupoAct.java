@@ -17,9 +17,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import br.com.sindquimicace.R;
+import br.com.sindquimicace.adapter.GrupoAdapter;
 import br.com.sindquimicace.adapter.UsuarioAdapter;
+import br.com.sindquimicace.delegate.GruposDelegate;
 import br.com.sindquimicace.delegate.ListaUsuariosDelegate;
 import br.com.sindquimicace.delegate.SendMessageDelegate;
+import br.com.sindquimicace.task.GruposTask;
 import br.com.sindquimicace.task.ListaUsuariosTask;
 import br.com.sindquimicace.task.SendMessageTask;
 import br.com.sindquimicace.util.Data;
@@ -28,12 +31,13 @@ import br.com.sindquimicace.ws.Mensagem;
 import br.com.sindquimicace.ws.Usuario;
 
 
-public class MsgUsuariosAct extends AppCompatActivity implements ListaUsuariosDelegate,
+public class MsgGrupoAct extends AppCompatActivity implements GruposDelegate,
         SendMessageDelegate {
 
-    private ListView listViewUsuarios;
 
-    private List<Usuario> listaUsuarios;
+    private ListView listViewGrupos;
+
+    private List<Grupo> listaGrupos;
 
     ProgressDialog ringProgressDialog;
 
@@ -46,10 +50,10 @@ public class MsgUsuariosAct extends AppCompatActivity implements ListaUsuariosDe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_msg_usuarios);
+        setContentView(R.layout.activity_msg_send_grupos);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("Selecione os Usuários");
+        toolbar.setTitle("Selecione os Grupos");
         setSupportActionBar(toolbar);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -62,9 +66,9 @@ public class MsgUsuariosAct extends AppCompatActivity implements ListaUsuariosDe
         mensagem.setUsuarios(new ArrayList<Usuario>());
         mensagem.setGrupos(new ArrayList<Grupo>());
 
-        listViewUsuarios = (ListView) findViewById(R.id.listView1);
+        listViewGrupos = (ListView) findViewById(R.id.listView2);
 
-        ListUtils.setDynamicHeight(listViewUsuarios);
+        ListUtils.setDynamicHeight(listViewGrupos);
 
         btnEnviar = (ImageView) findViewById(R.id.btnEnviar);
 
@@ -72,25 +76,39 @@ public class MsgUsuariosAct extends AppCompatActivity implements ListaUsuariosDe
             @Override
             public void onClick(View view) {
 
-                for(Usuario user : listaUsuarios){
+                if(listaGrupos != null && !listaGrupos.isEmpty()) {
+                    for (Grupo grupo : listaGrupos) {
 
-                    if(user.getIsChecked() != null && user.getIsChecked()){
-                        mensagem.getUsuarios().add(user);
+                        if (grupo.getIsChecked() != null && grupo.getIsChecked()) {
+                            mensagem.getGrupos().add(grupo);
+                        }
+
                     }
-
                 }
-
 
                 postMessage();
 
             }
         });
 
-        ListaUsuariosTask taskUser = new ListaUsuariosTask(this);
+        GruposTask taskGrupos = new GruposTask(this);
 
-        taskUser.execute(usuario);
+        taskGrupos.execute(usuario);
     }
 
+    @Override
+    public void listouGrupos(List<Grupo> lista) {
+        ringProgressDialog.dismiss();
+
+        if(lista != null && !lista.isEmpty()){
+
+            listaGrupos = lista;
+
+            GrupoAdapter adapter = new GrupoAdapter(this,listaGrupos);
+
+            listViewGrupos.setAdapter(adapter);
+        }
+    }
 
     @Override
     public void onBackPressed()
@@ -117,16 +135,10 @@ public class MsgUsuariosAct extends AppCompatActivity implements ListaUsuariosDe
 
         if(mensagem.getGrupos().isEmpty() && mensagem.getUsuarios().isEmpty()){
 
-            Toast.makeText(this, "Selecione ao menos um destinatário!", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Selecione ao menos um grupo!", Toast.LENGTH_LONG).show();
             return;
 
         }
-
-        // nesse ponto eu envio uma mensagem para mim mesmo pra visualiza-la na linha do tempo
-
-        Usuario usuario = Data.getUsuario(PreferenceManager.getDefaultSharedPreferences(this));
-
-        mensagem.getUsuarios().add(usuario);
 
         SendMessageTask task = new SendMessageTask(this);
 
@@ -141,21 +153,6 @@ public class MsgUsuariosAct extends AppCompatActivity implements ListaUsuariosDe
         ringProgressDialog.show();
     }
 
-    @Override
-    public void listaUsuarios(List<Usuario> lista) {
-        ringProgressDialog.dismiss();
-
-        if(lista != null && !lista.isEmpty()){
-
-            listaUsuarios = lista;
-
-            UsuarioAdapter adapter = new UsuarioAdapter(this,listaUsuarios);
-
-            listViewUsuarios.setAdapter(adapter);
-
-        }
-
-    }
 
     @Override
     public void sendMessageOK(Mensagem msg) {

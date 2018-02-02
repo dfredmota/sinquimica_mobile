@@ -32,7 +32,7 @@ public class ListaUsuariosTask extends AsyncTask<Usuario, Usuario, List<Usuario>
 
         try {
 
-            usuarios = ws.listaUsuarios();
+            usuarios = ws.listaUsuarios(params[0].getEmpresaSistema());
 
         }catch(Exception e){
             e.printStackTrace();

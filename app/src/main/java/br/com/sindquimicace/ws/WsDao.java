@@ -1021,14 +1021,15 @@ public class WsDao {
 		return fileContent;
 	}
 	
-	public static List<Usuario> listaUsuarios() {
+	public static List<Usuario> listaUsuarios(Integer empresaSistema) {
 		Connection con = null;
 		PreparedStatement ps = null;
 		List<Usuario> lista = new ArrayList<Usuario>();
 
 		try {
 			con = DataConnect.getConnection();
-			ps = con.prepareStatement("Select * from usuario where cadastro_app=true");
+			ps = con.prepareStatement("Select * from usuario where cadastro_app=true and empresa_sistema_id="+empresaSistema
+			+" and status=true");
 
 			ResultSet rs = ps.executeQuery();
 

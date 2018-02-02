@@ -79,9 +79,11 @@ public class UsuarioAdapter extends BaseAdapter{
 
                 Bitmap bmp = BitmapFactory.decodeByteArray(result.get(position).getImagem(), 0, result.get(position).getImagem().length);
 
-                Bitmap bMapScaled = Bitmap.createScaledBitmap(bmp, 50, 50, true);
+                if(bmp != null) {
+                    Bitmap bMapScaled = Bitmap.createScaledBitmap(bmp, 50, 50, true);
 
-                holder.img.setImageBitmap(bMapScaled);
+                    holder.img.setImageBitmap(bMapScaled);
+                }
 
             }
 

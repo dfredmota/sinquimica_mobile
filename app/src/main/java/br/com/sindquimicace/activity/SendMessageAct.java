@@ -1,28 +1,18 @@
 package br.com.sindquimicace.activity;
 
-import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.preference.PreferenceManager;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import br.com.sindquimicace.R;
-import br.com.sindquimicace.delegate.ListaUsuariosDelegate;
-import br.com.sindquimicace.delegate.SendMessageDelegate;
-import br.com.sindquimicace.task.ListaUsuariosTask;
-import br.com.sindquimicace.task.SendMessageTask;
 import br.com.sindquimicace.util.Data;
 import br.com.sindquimicace.ws.Mensagem;
 import br.com.sindquimicace.ws.Usuario;
@@ -38,6 +28,8 @@ public class SendMessageAct extends AppCompatActivity {
 
     EditText editConteudo;
 
+    String tipoTela;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,6 +41,14 @@ public class SendMessageAct extends AppCompatActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDefaultDisplayHomeAsUpEnabled(true);
+
+        Bundle bundle = getIntent().getExtras();
+
+        if(bundle != null){
+
+            tipoTela = bundle.getString("tipo");
+
+        }
 
         editConteudo = (EditText) findViewById(R.id.editConteudo);
 
@@ -75,7 +75,11 @@ public class SendMessageAct extends AppCompatActivity {
 
                 Data.insertMensagem(PreferenceManager.getDefaultSharedPreferences(SendMessageAct.this),mensagem);
 
-                navToSelectUsuarios();
+                if(tipoTela.equals("u")) {
+                    navToSelectUsuarios();
+                }else{
+                    navToSelectGrupos();
+                }
 
             }
         });
@@ -95,6 +99,13 @@ public class SendMessageAct extends AppCompatActivity {
     private void navToSelectUsuarios(){
 
         Intent i = new Intent(this, MsgUsuariosAct.class);
+        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        this.startActivity(i);
+    }
+
+    private void navToSelectGrupos(){
+
+        Intent i = new Intent(this, MsgGrupoAct.class);
         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         this.startActivity(i);
     }

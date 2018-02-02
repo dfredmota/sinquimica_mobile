@@ -83,6 +83,9 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".activity.DetalheEventoAct"
             android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".activity.MsgGrupoAct"
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>
