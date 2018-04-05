@@ -573,10 +573,9 @@ public class WsDao {
 		
 
 	}
-	
-	
+
 	public static List<Mensagem> 	listaMensagensUsuario(String diretorio, Usuario usuario) {
-		
+
 		Connection con = null;
 		PreparedStatement ps = null;
 		List<Mensagem> lista = new ArrayList<Mensagem>();
@@ -588,24 +587,24 @@ public class WsDao {
 						" and msg.id = msg_user.mensagem_id and msg_user.empresa_sistema_id="+usuario.getEmpresaSistema() +" ORDER BY created_at USING >");
 
 			ResultSet rs = ps.executeQuery();
-			
+
 			System.out.println(ps);
 
 			while(rs.next()) {
-								
+
 				Mensagem msg = new Mensagem();
-				
+
 				msg.setId(rs.getInt("id"));
 				msg.setConteudo(rs.getString("conteudo"));
 				msg.setCreatedAt(rs.getTimestamp("created_at"));
-				
+
 				Usuario user = getUsuario(diretorio,rs.getInt("usuario_send_id"));
-				
+
 				if(user != null){
-					
+
 					msg.setUsuario(user);
 				}
-				
+
 				lista.add(msg);
 
 			}
@@ -617,7 +616,65 @@ public class WsDao {
 		}
 		return lista;
 	}
-	
+
+
+	public static List<Evento> listaEventosDeGrupo(List<Grupo> grupos){
+
+		Connection con = null;
+		PreparedStatement ps = null;
+		List<Evento> lista = new ArrayList<Evento>();
+
+		StringBuilder sql = new StringBuilder();
+
+		sql.append(" select ev.id ,ev.descricao,ev.inicio,ev.fim,ev.empresa_sistema_id,ev.local,ev.status ");
+		sql.append(" from evento as ev,evento_grupo as ev_grupo where ev_grupo.grupo_id in ");
+
+		// concatena os grupos no sql
+
+		sql.append("( ");
+
+		for(Grupo gp : grupos){
+
+			sql.append(gp.getId()+",");
+		}
+
+		sql.append("0 ) ");
+
+		sql.append(" and ev_grupo.evento_id = ev.id order by ev.created_at USING >");
+
+		try {
+			con = DataConnect.getConnection();
+			ps = con.prepareStatement(sql.toString());
+
+			ResultSet rs = ps.executeQuery();
+
+			System.out.println(ps);
+
+			while(rs.next()) {
+
+				Evento evento = new Evento();
+
+				evento.setId(rs.getInt("id"));
+				evento.setDescricao(rs.getString("descricao"));
+				evento.setInicio(rs.getTimestamp("inicio"));
+				evento.setFim(rs.getTimestamp("fim"));
+				evento.setLocal(rs.getString("local"));
+				evento.setStatus(rs.getBoolean("status"));
+
+				lista.add(evento);
+
+			}
+		} catch (SQLException ex) {
+			System.out.println("Login error -->" + ex.getMessage());
+			return lista;
+		} finally {
+			DataConnect.close(con);
+		}
+		return lista;
+
+
+	}
+
 	public static List<Mensagem> 	listaMensagensGrupo(Grupo grupo) {
 		
 		Connection con = null;
@@ -916,6 +973,41 @@ public class WsDao {
 				grupo.setNome(rs.getString("nomegrupo"));
 				grupo.setEmpresaSistema(rs.getInt("empresasistemaid"));
 				
+				lista.add(grupo);
+
+			}
+
+
+		} catch (SQLException ex) {
+			System.out.println("Login error -->" + ex.getMessage());
+			return lista;
+		} finally {
+			DataConnect.close(con);
+		}
+		return lista;
+	}
+
+	public static List<Grupo> listaGruposEmpresaAssociada(Usuario usuario) {
+
+		Connection con = null;
+		PreparedStatement ps = null;
+		List<Grupo> lista = new ArrayList<Grupo>();
+
+		try {
+			con = DataConnect.getConnection();
+			ps = con.prepareStatement(" select gp.nome as nomegrupo,gp.id as id,gp.empresa_sistema_id as empresaSistemaId from grupo gp,empresa_associada emp,grupo_empresa_associadas gp_emp "+
+					" where emp.id = gp_emp.empresa_associada_id and emp.id = "+usuario.getEmpresa().getId()+" and gp_emp.grupo_id = gp.id");
+
+			ResultSet rs = ps.executeQuery();
+
+			while(rs.next()) {
+
+				Grupo grupo = new Grupo();
+
+				grupo.setId(rs.getInt("id"));
+				grupo.setNome(rs.getString("nomegrupo"));
+				grupo.setEmpresaSistema(rs.getInt("empresasistemaid"));
+
 				lista.add(grupo);
 
 			}

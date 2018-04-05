@@ -2,6 +2,7 @@ package br.com.sindquimicace.task;
 
 import android.os.AsyncTask;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import br.com.sindquimicace.delegate.GruposDelegate;
@@ -29,13 +30,34 @@ public class GruposTask extends AsyncTask<Usuario, Usuario, List<Grupo>> {
 
         WsDao ws = new WsDao();
 
-        List<Grupo> lista = null;
+        List<Grupo> lista = new ArrayList<Grupo>();
 
         try {
 
-            lista = ws.listaGruposUsuario(params[0]);
+            List<Grupo> listaUsuarios = ws.listaGruposUsuario(params[0]);
 
-            System.out.print("Size de Grupos: "+lista.size());
+            List<Grupo> listaGrupos = ws.listaGruposEmpresaAssociada(params[0]);
+
+            if(listaUsuarios != null && !listaUsuarios.isEmpty()){
+
+                for(int x = 0; x < listaUsuarios.size(); x++){
+
+                    lista.add(listaUsuarios.get(x));
+
+                }
+
+            }
+
+            if(listaGrupos != null && !listaGrupos.isEmpty()){
+
+                for(int x = 0; x < listaGrupos.size(); x++){
+
+                    lista.add(listaGrupos.get(x));
+
+                }
+
+            }
+
 
         }catch(Exception e){
             e.printStackTrace();
