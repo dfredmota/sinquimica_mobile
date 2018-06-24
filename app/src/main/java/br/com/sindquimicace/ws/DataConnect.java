@@ -12,7 +12,7 @@ public class DataConnect {
 		try {
 			Class.forName("org.postgresql.Driver");
 			Connection con = DriverManager
-					.getConnection("jdbc:postgresql://191.252.100.171:5432/sindquimica", "postgres", "Root@3873");
+					.getConnection("jdbc:postgresql://191.252.111.154:5432/sindquimica", "postgres", "lojapesada@3873");
 			return con;
 		} catch (Exception ex) {
 			System.out.println("Database.getConnection() Error -->"
